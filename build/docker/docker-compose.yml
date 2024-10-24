@@ -1,0 +1,60 @@
+services:
+  app-py2:
+    image: dictrack_py2
+    # command: "gunicorn -k gevent -w 1 -b 0.0.0.0:5000 main:app"
+    ports:
+      - "5001:5000"
+    environment:
+      - REDIS_HOST=redis
+    volumes:
+      - ../../app:/app
+    depends_on:
+      - redis
+  app-py3:
+    image: dictrack_py3
+    # command: "gunicorn -k gevent -w 1 -b 0.0.0.0:5000 main:app"
+    ports:
+      - "5002:5000"
+    environment:
+      - REDIS_HOST=redis
+    volumes:
+      - ../../app:/app
+    depends_on:
+      - redis
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  locust-master:
+    image: locustio/locust
+    ports:
+      - "8089:8089"
+    volumes:
+      - ../../app/locust:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --master -H http://app-py2:5000
+
+  locust-worker:
+    image: locustio/locust
+    volumes:
+      - ../../app/locust:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --worker --master-host locust-master
+
+  locust-master-2:
+    image: locustio/locust
+    ports:
+      - "8090:8089"
+    volumes:
+      - ../../app/locust:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --master -H http://app-py3:5000
+
+  locust-worker-2:
+    image: locustio/locust
+    volumes:
+      - ../../app/locust:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --worker --master-host locust-master-2
+
+volumes:
+  redis-data:

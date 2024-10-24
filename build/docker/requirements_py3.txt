@@ -1,0 +1,8 @@
+chromalog==1.0.5
+dictor==0.1.12
+flask==3.0.3
+gevent==24.10.3
+gunicorn==23.0.0
+python-redis-lock==4.0.0
+redis[hiredis]==5.1.1
+six==1.16.0
