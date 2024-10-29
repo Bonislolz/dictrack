@@ -99,6 +99,8 @@ class RedisDataStore(BaseDataStore):
                             self._get_data_key(tracker=tracker), tracker.name, b_tracker
                         )
 
+                pipe.execute()
+            
             del conditions_cache
 
             return dirtied_trackers, completed_trackers
