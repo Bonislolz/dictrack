@@ -4,9 +4,8 @@ import time
 
 EVENT_TRACKER_ADDED = 1001
 EVENT_TRACKER_MODIFIED = 1002
-EVENT_TRACKER_REMOVED = 1003
-EVENT_TRACKER_COMPLETED = 1004
-EVENT_TRACKER_RESET = 1005
+EVENT_TRACKER_COMPLETED = 1003
+EVENT_TRACKER_RESET = 1004
 # Collect all event constants that start with 'EVENT_'
 EVENT_ALL = [value for key, value in globals().items() if key.startswith("EVENT_")]
 

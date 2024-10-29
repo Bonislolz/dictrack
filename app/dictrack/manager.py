@@ -80,12 +80,6 @@ class TrackingManager(object):
                 )
             )
 
-            self._dispatch_event(
-                TrackerEvent(
-                    EVENT_TRACKER_REMOVED, tracker.group_id, tracker.name, tracker
-                )
-            )
-
         return dirtied_trackers, completed_trackers
 
     def reset_all(self):

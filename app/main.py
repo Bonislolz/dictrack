@@ -11,7 +11,6 @@ from dictrack.datastores.redis import RedisDataStore
 from dictrack.events import (
     EVENT_TRACKER_COMPLETED,
     EVENT_TRACKER_MODIFIED,
-    EVENT_TRACKER_REMOVED,
 )
 from dictrack.manager import TrackingManager
 from dictrack.utils.logger import logger
@@ -40,7 +39,6 @@ def on_track():
 CODE_TO_STR_MAPPING = {
     EVENT_TRACKER_MODIFIED: "MODIFIED",
     EVENT_TRACKER_COMPLETED: "COMPLETED",
-    EVENT_TRACKER_REMOVED: "REMOVED",
 }
 
 
@@ -48,10 +46,7 @@ def print_event(event):
     readable_code = CODE_TO_STR_MAPPING[event.code]
     readable_time = datetime.fromtimestamp(event.event_ts).strftime("%Y-%m-%d %H:%M:%S")
 
-    if event.code in (
-        EVENT_TRACKER_COMPLETED,
-        EVENT_TRACKER_REMOVED,
-    ):
+    if event.code in (EVENT_TRACKER_COMPLETED,):
         logger.info(
             "[{}] - {} {} at {}".format(
                 event.group_id, event.name, readable_code, readable_time
@@ -61,7 +56,6 @@ def print_event(event):
 
 manager.add_listener(EVENT_TRACKER_MODIFIED, print_event)
 manager.add_listener(EVENT_TRACKER_COMPLETED, print_event)
-manager.add_listener(EVENT_TRACKER_REMOVED, print_event)
 
 
 if __name__ == "__main__":
