@@ -6,6 +6,7 @@ services:
       - "5001:5000"
     environment:
       - REDIS_HOST=redis
+      - MONGODB_HOST=mongodb
     volumes:
       - ../../app:/app
     depends_on:
@@ -17,6 +18,7 @@ services:
       - "5002:5000"
     environment:
       - REDIS_HOST=redis
+      - MONGODB_HOST=mongodb
     volumes:
       - ../../app:/app
     depends_on:
@@ -27,6 +29,13 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+
+  mongodb:
+    image: mongodb/mongodb-community-server:5.0-ubi8
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
 
   locust-master:
     image: locustio/locust
@@ -58,3 +67,4 @@ services:
 
 volumes:
   redis-data:
+  mongodb-data:

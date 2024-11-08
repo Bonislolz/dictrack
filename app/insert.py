@@ -7,10 +7,14 @@ import random
 from datetime import datetime
 
 import six
-from dictrack.conditions import KeyValueEQ, KeyValueGE
-from dictrack.datastores import RedisDataStore
+from dictrack.conditions.keys import KeyValueEQ, KeyValueGE
+from dictrack.data_caches.memory import MemoryDataCache  # noqa: F401
+from dictrack.data_caches.redis import RedisDataCache  # noqa: F401
+from dictrack.data_stores.mongodb import MongoDBDataStore
+from dictrack.events import EVENT_TRACKER_ADDED
 from dictrack.manager import TrackingManager
-from dictrack.trackers import AccumulationTracker, CountTracker
+from dictrack.trackers.numerics.accumulation import AccumulationTracker  # noqa: F401
+from dictrack.trackers.numerics.count import CountTracker  # noqa: F401
 from dictrack.utils.errors import ConflictingNameError
 from dictrack.utils.logger import logger
 
@@ -52,11 +56,14 @@ def print_event(event):
     )
 
 
-manager = TrackingManager(RedisDataStore(host=os.environ.get("REDIS_HOST")))
-# manager.add_listener(EVENT_TRACKER_ADDED, print_event)
-# manager.reset_all()
-users = 50000
-batch_size = 5000
+manager = TrackingManager(
+    RedisDataCache(host=os.environ.get("REDIS_HOST")),
+    MongoDBDataStore(host=os.environ.get("MONGODB_HOST")),
+)
+manager.flush(confirm=True)
+
+users = 1000
+batch_size = 1000
 total_users = list(six.moves.range(10000001, 10000001 + users))
 batched_users = [
     total_users[i : i + batch_size] for i in range(0, len(total_users), batch_size)
@@ -64,10 +71,16 @@ batched_users = [
 
 
 def insert_trackers(users):
+    manager = TrackingManager(
+        RedisDataCache(host=os.environ.get("REDIS_HOST")),
+        MongoDBDataStore(host=os.environ.get("MONGODB_HOST")),
+    )
+    manager.add_listener(EVENT_TRACKER_ADDED, print_event)
+
     for user in users:
-        trackers = create_trackers(100, 100)
+        trackers = create_trackers(50, 50)
         try:
-            manager.add_trackers(str(user), trackers)
+            manager.add_trackers(str(user), trackers, expire=random.randint(60, 100))
         except ConflictingNameError:
             continue
 
@@ -76,4 +89,3 @@ pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
 results = pool.map(insert_trackers, batched_users)
 pool.close()
 pool.join()
-logger.info(results)
