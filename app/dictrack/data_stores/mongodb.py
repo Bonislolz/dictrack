@@ -30,24 +30,45 @@ class MongoDBDataStore(BaseDataStore):
         collection="data_store",
         database="dictrack",
         client=None,
+        strict=True,
         **connect_kwargs
     ):
         """
         Initialize a MongoDB data store with prioritized connection options.
-        Support two methods to establish MongoDB connection:
-            1. Pass a MongoClient object via client.
+        Supports two methods to establish MongoDB connection:
+            1. Pass a MongoClient object via `client`.
             2. Pass MongoDB connection kwargs directly.
-            Priority order: 1 > 2.
+        Priority order: 1 > 2.
 
-        :param `str` collection: The name of the MongoDB collection used for data storage.
-        Defaults to `"data_store"`.
-        :param `str` database: The name of the MongoDB database used for data storage.
-        Defaults to `"dictrack"`.
-        :param `MongoClient` client: An optional MongoDB client instance.
-        :param `dict` connect_kwargs: Additional connection arguments
-        if `client` is not provided.
-        :raises `TypeError`: If `collection`, `database`, or `client` types are invalid.
-        :raises `ConnectionError`: If MongoDB client initialization fails.
+        Parameters
+        ----------
+        scheduler_class : type, optional
+            The scheduler class for periodic tasks. Defaults to `BackgroundScheduler`.
+        check_interval : int, optional
+            Interval in seconds to check for updates. Defaults to `60 * 60 * 2`.
+        collection : str, optional
+            The name of the MongoDB collection used for data storage. Defaults to `"data_store"`.
+        database : str, optional
+            The name of the MongoDB database used for data storage. Defaults to `"dictrack"`.
+        client : MongoClient, optional
+            An optional MongoDB client instance for direct connection.
+        strict : bool, optional
+            If `True`, performs strict type checking for `client` (`pymongo.mongo_client.MongoClient`).
+            Defaults to `True`.
+        connect_kwargs : dict, optional
+            Additional connection arguments if `client` is not provided.
+
+        Raises
+        ------
+        TypeError
+            If `collection`, `database`, or `client` types are invalid when `strict` is `True`.
+        ConnectionError
+            If MongoDB client initialization fails due to invalid `client` or `connect_kwargs`.
+
+        Notes
+        -----
+        When `strict` is `True`, `client` must be an instance of `pymongo.mongo_client.MongoClient`.
+        If no client is provided, `connect_kwargs` are used to create a new MongoDB client.
         """
         super(MongoDBDataStore, self).__init__(
             scheduler_class=scheduler_class, check_interval=check_interval
@@ -55,7 +76,8 @@ class MongoDBDataStore(BaseDataStore):
 
         valid_type(collection, six.string_types)
         valid_type(database, six.string_types)
-        valid_type(client, MongoClient, allow_empty=True)
+        if strict:
+            valid_type(client, MongoClient, allow_empty=True)
 
         if client is not None:
             self._mongo_client = client

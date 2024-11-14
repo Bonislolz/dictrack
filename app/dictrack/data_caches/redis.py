@@ -36,6 +36,7 @@ class RedisDataCache(BaseDataCache):
         data_expire=60 * 60 * 24,
         client=None,
         pool=None,
+        strict=True,
         **connect_kwargs
     ):
         """
@@ -68,6 +69,9 @@ class RedisDataCache(BaseDataCache):
             An optional Redis client instance.
         pool : ConnectionPool, optional
             An optional connection pool for Redis.
+        strict : bool, optional
+            If `True`, performs strict type checking for `client` (`redis.StrictRedis`) and
+            `pool` (`redis.ConnectionPool`). Defaults to `True`.
         connect_kwargs : dict, optional
             Additional connection arguments if neither `client` nor `pool` is provided.
 
@@ -79,6 +83,12 @@ class RedisDataCache(BaseDataCache):
             If `data_key`, `last_cached_key`, `check_flag_key`, `batch_size`, `client`, or `pool` types are invalid.
         IOError
             If Redis client initialization fails due to invalid `pool`, `client`, or `connect_kwargs`.
+
+        Notes
+        -----
+        When `strict` is `True`, `client` must be an instance of `redis.StrictRedis`,
+        and `pool` must be an instance of `redis.ConnectionPool`.
+        If no `client` or `pool` is provided, `connect_kwargs` are used to create a new Redis client.
         """
         super(RedisDataCache, self).__init__(
             scheduler_class, check_interval, stale_threshold
@@ -88,8 +98,9 @@ class RedisDataCache(BaseDataCache):
         valid_type(last_cached_key, six.string_types)
         valid_type(check_flag_key, six.string_types)
         valid_type(batch_size, six.integer_types)
-        valid_type(client, StrictRedis, allow_empty=True)
-        valid_type(pool, ConnectionPool, allow_empty=True)
+        if strict:
+            valid_type(client, StrictRedis, allow_empty=True)
+            valid_type(pool, ConnectionPool, allow_empty=True)
 
         self._data_key = data_key
         self._last_cached_key = last_cached_key
