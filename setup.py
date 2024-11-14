@@ -14,7 +14,7 @@ except TypeError:
 
 setup(
     name="dictrack",
-    version="2.0.0",
+    version="2.0.1",
     author="Tim Liao",
     author_email="bonis0324work@gmail.com",
     description="A componentized dictionary tracker",
