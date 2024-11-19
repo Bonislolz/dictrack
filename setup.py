@@ -12,9 +12,27 @@ except TypeError:
     with open(path.join(working_directory, "README.md")) as f:
         long_description = f.read()
 
+
+def get_version():
+    version_file = path.join(working_directory, "app/dictrack/__init__.py")
+    try:
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("dictrack", version_file)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+    except ImportError:
+        import imp
+
+        module_name = "dictrack"
+        module = imp.load_source(module_name, version_file)
+
+    return module.__version__
+
+
 setup(
     name="dictrack",
-    version="2.0.1",
+    version=get_version(),
     author="Tim Liao",
     author_email="bonis0324work@gmail.com",
     description="A componentized dictionary tracker",
