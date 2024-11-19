@@ -253,7 +253,7 @@ class MongoDBDataStore(BaseDataStore):
 
     def flush(self):
         try:
-            self._data_collection.drop()
+            self._data_collection.delete_many({})
         except Exception as e:
             logger.exception("Flush all data failed, {}".format(e.__repr__()))
 
