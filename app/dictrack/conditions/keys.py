@@ -39,11 +39,31 @@ class KeyExists(BaseCondition):
         return result != BaseCondition.DEFAULT
 
 
+class KeyNotExists(KeyExists):
+    def __repr__(self):
+        base_repr = super(KeyNotExists, self).__repr__()
+        return base_repr.replace("KeyExists", self.__class__.__name__)
+
+    @typecheck()
+    def check(self, data, *args, **kwargs):
+        return not super(KeyNotExists, self).check(data, *args, **kwargs)
+
+
 class KeyValueComparison(KeyExists):
     def __init__(self, key, value, op=operator.eq, *args, **kwargs):
         super(KeyValueComparison, self).__init__(key, *args, **kwargs)
 
-        valid_obj(op, (operator.eq, operator.lt, operator.le, operator.gt, operator.ge))
+        valid_obj(
+            op,
+            (
+                operator.eq,
+                operator.ne,
+                operator.lt,
+                operator.le,
+                operator.gt,
+                operator.ge,
+            ),
+        )
         self._op = op
         self._value = value
 
@@ -102,6 +122,12 @@ class KeyValueEQ(KeyValueComparison):
     def __repr__(self):
         base_repr = super(KeyValueEQ, self).__repr__()
         return base_repr.replace("KeyValueComparison", self.__class__.__name__)
+
+
+class KeyValueNE(KeyValueEQ):
+    def __init__(self, key, value, *args, **kwargs):
+        super(KeyValueNE, self).__init__(key, value, *args, **kwargs)
+        self._op = operator.ne
 
 
 class KeyValueLT(KeyValueEQ):
@@ -175,3 +201,13 @@ class KeyValueContained(KeyExists):
             return self.value.lower() in result.lower()
 
         return self.value in result
+
+
+class KeyValueNotContained(KeyValueContained):
+    def __repr__(self):
+        base_repr = super(KeyValueNotContained, self).__repr__()
+        return base_repr.replace("KeyValueContained", self.__class__.__name__)
+
+    @typecheck()
+    def check(self, data, *args, **kwargs):
+        return not super(KeyValueNotContained, self).check(data, *args, **kwargs)
