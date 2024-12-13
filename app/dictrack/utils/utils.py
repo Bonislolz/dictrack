@@ -238,7 +238,14 @@ def numeric(value, allow_empty=False):
 
 
 STR_TO_OP_MAPPING = {}
-for op in (operator.eq, operator.lt, operator.le, operator.gt, operator.ge):
+for op in (
+    operator.eq,
+    operator.ne,
+    operator.lt,
+    operator.le,
+    operator.gt,
+    operator.ge,
+):
     STR_TO_OP_MAPPING[op.__str__()] = op
 
 
