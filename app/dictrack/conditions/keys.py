@@ -172,7 +172,9 @@ class KeyValueContained(KeyExists):
         return hash(str(key_hash) + str(value_hash))
 
     def __repr__(self):
-        return "<KeyValueContained (key={} value={})>".format(self.key, self.value)
+        return "<KeyValueContained (key={} value={} case_sensitive={})>".format(
+            self.key, self.value, self._case_sensitive
+        )
 
     def __getstate__(self):
         state = super(KeyValueContained, self).__getstate__()
@@ -210,4 +212,7 @@ class KeyValueNotContained(KeyValueContained):
 
     @typecheck()
     def check(self, data, *args, **kwargs):
-        return not super(KeyValueNotContained, self).check(data, *args, **kwargs)
+        if not KeyExists.check(self, data, *args, **kwargs):
+            return False
+
+        return not KeyValueContained.check(self, data, *args, **kwargs)
