@@ -2,10 +2,11 @@
 
 import operator
 
+import six
 from dictor import dictor
 
 from dictrack.conditions.base import BaseCondition
-from dictrack.utils.utils import str_to_operator, typecheck, valid_obj
+from dictrack.utils.utils import str_to_operator, typecheck, valid_obj, valid_type
 
 
 class KeyExists(BaseCondition):
@@ -125,3 +126,52 @@ class KeyValueGE(KeyValueEQ):
     def __init__(self, key, value, *args, **kwargs):
         super(KeyValueGE, self).__init__(key, value, *args, **kwargs)
         self._op = operator.ge
+
+
+class KeyValueContained(KeyExists):
+    def __init__(self, key, value, case_sensitive=True, *args, **kwargs):
+        super(KeyValueContained, self).__init__(key, *args, **kwargs)
+
+        valid_type(value, six.string_types)
+        self._value = value
+        self._case_sensitive = case_sensitive
+
+    def __eq__(self, other):
+        return self.key == other.key and self.value == other.value
+
+    def __hash__(self):
+        key_hash = hash(self.key)
+        value_hash = hash(self.value)
+
+        return hash(str(key_hash) + str(value_hash))
+
+    def __repr__(self):
+        return "<KeyValueContained (key={} value={})>".format(self.key, self.value)
+
+    def __getstate__(self):
+        state = super(KeyValueContained, self).__getstate__()
+        state["value"] = self.value
+        state["case_sensitive"] = self._case_sensitive
+
+        return state
+
+    def __setstate__(self, state):
+        super(KeyValueContained, self).__setstate__(state)
+
+        self._value = state["value"]
+        self._case_sensitive = state["case_sensitive"]
+
+    @property
+    def value(self):
+        return self._value
+
+    @typecheck()
+    def check(self, data, *args, **kwargs):
+        if not super(KeyValueContained, self).check(data, *args, **kwargs):
+            return False
+
+        result = dictor(data, self.key)
+        if not self._case_sensitive:
+            return self.value.lower() in result.lower()
+
+        return self.value in result
