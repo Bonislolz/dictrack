@@ -107,7 +107,7 @@ class TimeLimiter(BaseLimiter):
             self.start, self.end, self.interval
         )
 
-    def pre_track(self, data, pre_track, *args, **kwargs):
+    def pre_track(self, data, pre_tracker, *args, **kwargs):
         now_ts = int(time.time()) if "now_ts" not in kwargs else kwargs["now_ts"]
 
         if not (self.start <= now_ts <= self.end):

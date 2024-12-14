@@ -10,11 +10,11 @@ class BaseLimiter(six.with_metaclass(ABCMeta)):
     def __init__(self):
         self.limited = False
 
-    def pre_track(self, data, pre_track, *args, **kwargs):
+    def pre_track(self, data, pre_tracker, *args, **kwargs):
         """"""
         return True
 
-    def post_track(self, data, post_track, *args, **kwargs):
+    def post_track(self, data, post_tracker, *args, **kwargs):
         """"""
         return True
 
