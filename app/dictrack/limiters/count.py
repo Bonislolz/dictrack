@@ -54,9 +54,9 @@ class CountLimiter(BaseLimiter):
         self.remaining -= 1
 
         if self.remaining <= 0 and post_tracker.dirtied and not post_tracker.completed:
-            return False
+            self.limited = True
 
-        self.limited = True
+            return False
 
         return True
 
