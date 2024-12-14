@@ -61,7 +61,7 @@ setup(
         ],
         "mongodb": [
             "pymongo == 3.13.0;python_version == '2.7'",
-            "pymongo >= 4.10.1, < 5.0;python_version >= '3.7'",
+            "pymongo >= 3.0, < 5.0;python_version >= '3.7'",
         ],
         "gevent": [
             "apscheduler[gevent] == 3.8.1;python_version == '2.7'",
