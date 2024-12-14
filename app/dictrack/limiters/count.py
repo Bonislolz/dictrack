@@ -50,13 +50,13 @@ class CountLimiter(BaseLimiter):
     def __repr__(self):
         return "<CountLimiter (count={})>".format(self.count)
 
-    def post_track(self, data, post_track, *args, **kwargs):
+    def post_track(self, data, post_tracker, *args, **kwargs):
         self.remaining -= 1
 
-        if self.remaining <= 0 and post_track.dirtied and not post_track.completed:
-            return False
+        if self.remaining <= 0 and post_tracker.dirtied and not post_tracker.completed:
+            self.limited = True
 
-        self.limited = True
+            return False
 
         return True
 

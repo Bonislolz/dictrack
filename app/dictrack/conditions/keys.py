@@ -2,10 +2,11 @@
 
 import operator
 
+import six
 from dictor import dictor
 
 from dictrack.conditions.base import BaseCondition
-from dictrack.utils.utils import str_to_operator, typecheck, valid_obj
+from dictrack.utils.utils import str_to_operator, typecheck, valid_obj, valid_type
 
 
 class KeyExists(BaseCondition):
@@ -38,11 +39,31 @@ class KeyExists(BaseCondition):
         return result != BaseCondition.DEFAULT
 
 
+class KeyNotExists(KeyExists):
+    def __repr__(self):
+        base_repr = super(KeyNotExists, self).__repr__()
+        return base_repr.replace("KeyExists", self.__class__.__name__)
+
+    @typecheck()
+    def check(self, data, *args, **kwargs):
+        return not super(KeyNotExists, self).check(data, *args, **kwargs)
+
+
 class KeyValueComparison(KeyExists):
     def __init__(self, key, value, op=operator.eq, *args, **kwargs):
         super(KeyValueComparison, self).__init__(key, *args, **kwargs)
 
-        valid_obj(op, (operator.eq, operator.lt, operator.le, operator.gt, operator.ge))
+        valid_obj(
+            op,
+            (
+                operator.eq,
+                operator.ne,
+                operator.lt,
+                operator.le,
+                operator.gt,
+                operator.ge,
+            ),
+        )
         self._op = op
         self._value = value
 
@@ -103,6 +124,12 @@ class KeyValueEQ(KeyValueComparison):
         return base_repr.replace("KeyValueComparison", self.__class__.__name__)
 
 
+class KeyValueNE(KeyValueEQ):
+    def __init__(self, key, value, *args, **kwargs):
+        super(KeyValueNE, self).__init__(key, value, *args, **kwargs)
+        self._op = operator.ne
+
+
 class KeyValueLT(KeyValueEQ):
     def __init__(self, key, value, *args, **kwargs):
         super(KeyValueLT, self).__init__(key, value, *args, **kwargs)
@@ -125,3 +152,67 @@ class KeyValueGE(KeyValueEQ):
     def __init__(self, key, value, *args, **kwargs):
         super(KeyValueGE, self).__init__(key, value, *args, **kwargs)
         self._op = operator.ge
+
+
+class KeyValueContained(KeyExists):
+    def __init__(self, key, value, case_sensitive=True, *args, **kwargs):
+        super(KeyValueContained, self).__init__(key, *args, **kwargs)
+
+        valid_type(value, six.string_types)
+        self._value = value
+        self._case_sensitive = case_sensitive
+
+    def __eq__(self, other):
+        return self.key == other.key and self.value == other.value
+
+    def __hash__(self):
+        key_hash = hash(self.key)
+        value_hash = hash(self.value)
+
+        return hash(str(key_hash) + str(value_hash))
+
+    def __repr__(self):
+        return "<KeyValueContained (key={} value={} case_sensitive={})>".format(
+            self.key, self.value, self._case_sensitive
+        )
+
+    def __getstate__(self):
+        state = super(KeyValueContained, self).__getstate__()
+        state["value"] = self.value
+        state["case_sensitive"] = self._case_sensitive
+
+        return state
+
+    def __setstate__(self, state):
+        super(KeyValueContained, self).__setstate__(state)
+
+        self._value = state["value"]
+        self._case_sensitive = state["case_sensitive"]
+
+    @property
+    def value(self):
+        return self._value
+
+    @typecheck()
+    def check(self, data, *args, **kwargs):
+        if not super(KeyValueContained, self).check(data, *args, **kwargs):
+            return False
+
+        result = dictor(data, self.key)
+        if not self._case_sensitive:
+            return self.value.lower() in result.lower()
+
+        return self.value in result
+
+
+class KeyValueNotContained(KeyValueContained):
+    def __repr__(self):
+        base_repr = super(KeyValueNotContained, self).__repr__()
+        return base_repr.replace("KeyValueContained", self.__class__.__name__)
+
+    @typecheck()
+    def check(self, data, *args, **kwargs):
+        if not KeyExists.check(self, data, *args, **kwargs):
+            return False
+
+        return not KeyValueContained.check(self, data, *args, **kwargs)
