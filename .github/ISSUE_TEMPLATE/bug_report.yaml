@@ -23,7 +23,13 @@ body:
       label: What happened?
       description: Also tell us, what did you expect to happen?
       placeholder: Tell us what you see!
-      value: 'A bug happened!'
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps to Reproduce
+      description: Step-by-step instructions to help us replicate the issue.
+      placeholder: Tell us what you do!
     validations:
       required: true
   - type: dropdown
@@ -32,9 +38,14 @@ body:
       label: dictrack version
       description: What version of dictrack are you using?
       options:
-        - 2.x (latest)
-        - 1.x
-        - 0.x
+        - 2.0.4
+        - 2.0.3
+        - 2.0.2
+        - 2.0.1
+        - 2.0.0
+        - 1.1.0
+        - 1.0.2 (YANKED)
+        - 1.0.1 (YANKED)
       default: 0
     validations:
       required: true
@@ -44,7 +55,14 @@ body:
       label: Python version
       description: What version of Python are you using?
       options:
-        - 3.7+
-        - 2.7
+        - 3.13 (latest stable)
+        - 3.12
+        - 3.11
+        - 3.10
+        - 3.9
+        - 3.8 (EOF)
+        - 3.7 (EOF)
+        - 2.7 (EOF)
+        - 3.14 (pre-release)
     validations:
       required: true
