@@ -59,6 +59,11 @@ def test_time():
     limiter.pre_track({}, MockTracker())
     assert limiter.limited is True
 
+    limiter = TimeLimiter(interval=timedelta(days=1))
+    time.sleep(2)
+    limiter.pre_track({}, MockTracker())
+    assert limiter.limited is False
+
     limiter = TimeLimiter(end_ts=int(time.time()) + 1)
     time.sleep(2)
     limiter.pre_track({}, MockTracker())
