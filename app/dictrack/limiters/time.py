@@ -76,7 +76,7 @@ class TimeLimiter(BaseLimiter):
             interval = timedelta(seconds=end_ts - start_ts)
         # Use interval
         else:
-            end_ts = start_ts + interval.seconds
+            end_ts = start_ts + interval.total_seconds()
 
         if start_ts == end_ts:
             raise ValueError(
