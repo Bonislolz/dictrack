@@ -152,7 +152,10 @@ class RedisDataCache(BaseDataCache):
             with client.pipeline() as pipe:
                 pipe.hset(self._get_data_key(tracker=tracker), tracker.name, b_tracker)
                 pipe.expire(self._get_data_key(tracker=tracker), self._data_expire)
-                pipe.zadd(self._get_last_cached_key(), {group_id: int(time.time())})
+                # Compatibility for redis-py 2.x series: Use execute_command instead of zadd
+                # redis-py 2.x does not support the newer zadd syntax introduced in 3.x,
+                # so execute_command is used to ensure compatibility across versions.
+                pipe.execute_command("ZADD", self._get_last_cached_key(), int(time.time()), group_id)
                 pipe.expire(self._get_last_cached_key(), self._data_expire)
                 pipe.execute()
 
