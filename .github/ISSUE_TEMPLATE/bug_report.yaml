@@ -2,67 +2,64 @@ name: Bug report
 description: Create a report to help us improve
 title: '[BUG]: '
 labels: 'bug'
-assignees: 
-  - Bonislolz
+assignees:
+- Bonislolz
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report!
-  - type: input
-    id: contact
-    attributes:
-      label: Contact Details
-      description: How can we get in touch with you if we need more info?
-      placeholder: ex. email@example.com
-    validations:
-      required: false
-  - type: textarea
-    id: what_happened
-    attributes:
-      label: What happened?
-      description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see!
-    validations:
-      required: true
-  - type: textarea
-    attributes:
-      label: Steps to Reproduce
-      description: Step-by-step instructions to help us replicate the issue.
-      placeholder: Tell us what you do!
-    validations:
-      required: true
-  - type: dropdown
-    id: pkg_version
-    attributes:
-      label: dictrack version
-      description: What version of dictrack are you using?
-      options:
-        - 2.0.4
-        - 2.0.3
-        - 2.0.2
-        - 2.0.1
-        - 2.0.0
-        - 1.1.0
-        - 1.0.2 (YANKED)
-        - 1.0.1 (YANKED)
-      default: 0
-    validations:
-      required: true
-  - type: dropdown
-    id: py_version
-    attributes:
-      label: Python version
-      description: What version of Python are you using?
-      options:
-        - 3.13 (latest stable)
-        - 3.12
-        - 3.11
-        - '3.10'
-        - 3.9
-        - 3.8 (EOF)
-        - 3.7 (EOF)
-        - 2.7 (EOF)
-        - 3.14 (pre-release)
-    validations:
-      required: true
+- type: markdown
+  attributes:
+    value: |
+      Thanks for taking the time to fill out this bug report!
+- type: input
+  attributes:
+    label: Contact Details
+    description: How can we get in touch with you if we need more info?
+    placeholder: ex. email@example.com
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: What happened?
+    description: Also tell us, what did you expect to happen?
+    placeholder: Tell us what you see!
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Steps to Reproduce
+    description: Step-by-step instructions to help us replicate the issue.
+    placeholder: Tell us what you do!
+  validations:
+    required: true
+- type: dropdown
+  attributes:
+    label: dictrack version
+    description: What version of dictrack are you using?
+    options:
+    - 2.0.5
+    - 2.0.4 (YANKED)
+    - 2.0.3 (YANKED)
+    - 2.0.2 (YANKED)
+    - 2.0.1 (YANKED)
+    - 2.0.0 (YANKED)
+    - 1.1.0
+    - 1.0.2 (YANKED)
+    - 1.0.1 (YANKED)
+    default: 0
+  validations:
+    required: true
+- type: dropdown
+  attributes:
+    label: Python version
+    description: What version of Python are you using?
+    options:
+    - 3.13 (latest stable)
+    - 3.12
+    - 3.11
+    - '3.10'
+    - 3.9
+    - 3.8 (EOF)
+    - 3.7 (EOF)
+    - 2.7 (EOF)
+    - 3.14 (pre-release)
+  validations:
+    required: true
