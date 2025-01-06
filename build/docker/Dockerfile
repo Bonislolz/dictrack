@@ -23,8 +23,10 @@ ENV PATH=${HOME}/.local/bin:${PATH}
 
 RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
-  && apt-get install -y --no-install-recommends htop \
-  && useradd -s /bin/bash -m -d ${HOME} ${USER} \
+  && apt-get install -y --no-install-recommends htop sudo \
+  && useradd -s /bin/bash -m -d ${HOME} -G sudo ${USER} \
+  && echo "${USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USER} \
+  && chmod 0440 /etc/sudoers.d/${USER} \
   && mkdir ${HOME}/app \
   && chown -R ${USER}:${USER} ${HOME}/app
 
