@@ -4,8 +4,9 @@ dictor==0.1.12
 flask==1.1.4
 gevent==22.10.2
 gunicorn==19.10.0
+hiredis==1.1.0
 pymongo==3.13.0
 python-redis-lock==3.7.0
-redis[hiredis]==3.5.3
+redis>=2.10.0,<=3.5.3
 six==1.16.0
 sortedcontainers==2.4.0
