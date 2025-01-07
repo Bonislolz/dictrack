@@ -36,6 +36,7 @@ setup(
     author="Tim Liao",
     author_email="bonis0324work@gmail.com",
     description="A componentized dictionary tracker",
+    license="MIT License",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=find_packages(where="app"),
