@@ -35,7 +35,7 @@ setup(
     version=get_version(),
     author="Tim Liao",
     author_email="bonis0324work@gmail.com",
-    description="A componentized dictionary tracker",
+    description="A Flexible Dictionary Data Tracker for Condition-Based Monitoring",
     license="MIT License",
     long_description=long_description,
     long_description_content_type="text/markdown",
