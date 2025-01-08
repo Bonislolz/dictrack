@@ -35,7 +35,8 @@ body:
     label: dictrack version
     description: What version of dictrack are you using?
     options:
-    - 2.0.5
+    - 2.0.6
+    - 2.0.5 (YANKED)
     - 2.0.4 (YANKED)
     - 2.0.3 (YANKED)
     - 2.0.2 (YANKED)
