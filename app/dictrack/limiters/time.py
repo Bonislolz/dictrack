@@ -122,7 +122,7 @@ class TimeLimiter(BaseLimiter):
 
         now_ts = int(time.time()) if "now_ts" not in kwargs else kwargs["now_ts"]
         delta_seconds = (
-            self.interval.seconds
+            self.interval.total_seconds()
             if "reset_seconds" not in kwargs
             else kwargs["reset_seconds"]
         )

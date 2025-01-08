@@ -82,6 +82,17 @@ def test_time():
     assert limiter.limited is True
 
     limiter.reset()
+    limiter.pre_track({}, MockTracker())
+    assert limiter.limited is False
+
+    now_ts = int(time.time())
+    limiter = TimeLimiter(start_ts=now_ts - 86400 * 5, interval=timedelta(days=1))
+    limiter.pre_track({}, MockTracker())
+    assert limiter.limited is True
+
+    limiter.reset()
+    time.sleep(1)
+    limiter.pre_track({}, MockTracker())
     assert limiter.limited is False
 
     limiter = TimeLimiter(start_ts=int(time.time()) + 2, interval=timedelta(seconds=1))
