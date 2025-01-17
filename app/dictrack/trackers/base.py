@@ -214,6 +214,8 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
     @reset_policy.setter
     def reset_policy(self, value):
         valid_obj(value, list(six.moves.range(ResetPolicy.ALL + 1)))
+        self._check_health()
+
         self._reset_policy = value
 
     @property
@@ -235,6 +237,7 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
     @group_id.setter
     def group_id(self, value):
         valid_type(value, six.string_types)
+        self._check_health()
 
         if self.group_id == value:
             raise GroupIdDuplicateSetError(self.group_id)
@@ -255,21 +258,13 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
     @removed.setter
     def removed(self, value):
         valid_type(value, bool)
-
-        if self._removed:
-            raise TrackerAlreadyRemovedError(self.group_id, self.name)
+        self._check_health(completed=False)
 
         self._removed = value
 
     @property
     def dirtied(self):
         return self._dirtied
-
-    @dirtied.setter
-    def dirtied(self, value):
-        valid_type(value, bool)
-
-        self._dirtied = value
 
     @property
     def limited(self):
@@ -286,15 +281,13 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
     @loop_forever.setter
     def loop_forever(self, value):
         valid_type(value, bool)
+        self._check_health()
+
         self._loop_forever = value
 
     @typecheck()
     def track(self, data, *args, **kwargs):
-        if self.removed:
-            raise TrackerAlreadyRemovedError(self.group_id, self.name)
-
-        if self.completed:
-            raise TrackerAlreadyCompletedError(self.group_id, self.name)
+        self._check_health()
 
         if self.dirtied:
             logger.warning(
@@ -340,6 +333,7 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
     def add_listener(self, code, cb):
         valid_obj(code, EVENT_ALL)
         valid_callable(cb)
+        self._check_health(completed=False)
 
         self._listeners[code].append(cb)
 
@@ -353,9 +347,7 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         valid_obj(
             reset_policy, list(six.moves.range(ResetPolicy.ALL + 1)), allow_empty=True
         )
-
-        if self.removed:
-            raise TrackerAlreadyRemovedError(self.group_id, self.name)
+        self._check_health(completed=False)
 
         if reset_policy is None:
             reset_policy = self.reset_policy
@@ -374,6 +366,12 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
             TrackerEvent(EVENT_TRACKER_RESET, self.group_id, self.name, self)
         )
 
+    def add_targets(self, target):
+        valid_type(target, (six.integer_types, float, list, tuple))
+        self._check_health()
+
+        self._multi_target.extend(self._transform_multi_target(target))
+
     def _validate(
         self, name, conditions, target, group_id, limiters, reset_policy, loop_forever
     ):
@@ -387,8 +385,15 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
 
     def _init_target(self, target):
         self._current_stage = 0
-        self._multi_target = target if isinstance(target, (list, tuple)) else [target]
+        self._multi_target = self._transform_multi_target(target)
         self._target = self._get_new_target()
+
+    def _transform_multi_target(self, target):
+        return (
+            list(target)
+            if isinstance(target, tuple)
+            else [target] if isinstance(target, (six.integer_types, float)) else target
+        )
 
     def _get_new_target(self):
         new_target = self._multi_target.pop(0) if self._multi_target else None
@@ -479,6 +484,13 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
                 logger.exception(
                     "Notify listener ({}) failed, {}".format(cb.__name__, e)
                 )
+
+    def _check_health(self, removed=True, completed=True):
+        if self.removed and removed:
+            raise TrackerAlreadyRemovedError(self.group_id, self.name)
+
+        if self.completed and completed:
+            raise TrackerAlreadyCompletedError(self.group_id, self.name)
 
     @staticmethod
     @typecheck()
