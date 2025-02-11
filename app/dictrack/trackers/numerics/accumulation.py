@@ -13,6 +13,10 @@ logger = getLogger("dictrack.trackers.numerics.accumulation")
 
 
 class AccumulationTracker(NumericTracker):
+    """
+    A tracker that accumulates progress based on a specific key's value in incoming data.
+    """
+
     DEFAULT = "_THIS_IS_DEFAULT_VALUE"
 
     def __init__(
@@ -25,6 +29,7 @@ class AccumulationTracker(NumericTracker):
         limiters=None,
         reset_policy=ResetPolicy.DEFAULT,
         loop_forever=False,
+        init_progress=0,
         *args,
         **kwargs
     ):
@@ -54,6 +59,8 @@ class AccumulationTracker(NumericTracker):
             Policy defining conditions under which progress resets. Defaults to `ResetPolicy.DEFAULT`.
         loop_forever : bool, optional
             If `True`, tracker loops through targets indefinitely. Defaults to `False`.
+        init_progress : int or float, optional
+            The initial progress value when the tracker is created. Defaults to `0`.
         *args : tuple
             Additional positional arguments.
         **kwargs : dict
@@ -61,6 +68,8 @@ class AccumulationTracker(NumericTracker):
 
         Raises
         ------
+        ValueError
+            If any attribute fails validation.
         ValueError
             If `key` is not a string.
         """
@@ -72,6 +81,7 @@ class AccumulationTracker(NumericTracker):
             limiters=limiters,
             reset_policy=reset_policy,
             loop_forever=loop_forever,
+            init_progress=init_progress,
             *args,
             **kwargs
         )

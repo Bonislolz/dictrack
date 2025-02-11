@@ -51,6 +51,10 @@ class ResetPolicy(object):
 
 
 class BaseTracker(six.with_metaclass(ABCMeta)):
+    """
+    A base class for tracking data and maintaining progress based on conditions, limiters, and targets.
+    """
+
     DEFAULT_GROUP_ID = "_THIS_IS_DEFAULT_GID"
 
     def __init__(
@@ -62,6 +66,7 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         limiters=None,
         reset_policy=ResetPolicy.DEFAULT,
         loop_forever=False,
+        init_progress=0,
         *args,
         **kwargs
     ):
@@ -91,6 +96,8 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
             (e.g., `ResetPolicy.PROGRESS | ResetPolicy.LIMITER`).
         loop_forever : bool, optional
             Whether the tracker loops indefinitely through targets. Defaults to `False`.
+        init_progress : int or float, optional
+            The initial progress value when the tracker is created. Defaults to `0`.
         *args : tuple
             Additional positional arguments.
         **kwargs : dict
@@ -102,7 +109,14 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
             If any attribute fails validation.
         """
         self._validate(
-            name, conditions, target, group_id, limiters, reset_policy, loop_forever
+            name,
+            conditions,
+            target,
+            group_id,
+            limiters,
+            reset_policy,
+            loop_forever,
+            init_progress,
         )
 
         # Required
@@ -117,9 +131,9 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         self._limiters = set(limiters) if limiters is not None else set()
         self._reset_policy = reset_policy
         self._loop_forever = loop_forever
+        self._progress = init_progress
 
         # Private
-        self._progress = 0
         self._completed = False
         self._removed = False
         self._dirtied = (
@@ -274,6 +288,13 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
     def progress(self):
         return self._progress
 
+    @progress.setter
+    def progress(self, value):
+        valid_type(value, (six.integer_types, float))
+        self._check_health()
+
+        self._progress = value
+
     @property
     def loop_forever(self):
         return self._loop_forever
@@ -373,7 +394,15 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         self._multi_target.extend(self._transform_multi_target(target))
 
     def _validate(
-        self, name, conditions, target, group_id, limiters, reset_policy, loop_forever
+        self,
+        name,
+        conditions,
+        target,
+        group_id,
+        limiters,
+        reset_policy,
+        loop_forever,
+        init_progress,
     ):
         valid_type(name, six.string_types)
         valid_elements_type(conditions, BaseCondition)
@@ -382,6 +411,7 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         valid_elements_type(limiters, BaseLimiter, allow_empty=True)
         valid_obj(reset_policy, list(six.moves.range(ResetPolicy.ALL + 1)))
         valid_type(loop_forever, bool)
+        valid_type(init_progress, (six.integer_types, float))
 
     def _init_target(self, target):
         self._current_stage = 0
