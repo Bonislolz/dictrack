@@ -95,6 +95,12 @@ This project is licensed under the [MIT License](https://github.com/Bonislolz/di
 
 # CHANGELOG
 
+## [2.0.8](https://github.com/Bonislolz/dictrack/compare/2.0.7...2.0.8) - 2025-02-11
+### Added
+- Tracker now supports modifying progress ([#25](https://github.com/Bonislolz/dictrack/issues/25))
+### Changed
+### Fixed
+
 ## [2.0.7](https://github.com/Bonislolz/dictrack/compare/2.0.6...2.0.7) - 2025-01-20
 ### Added
 - Tracker now support adding new targets ([#23](https://github.com/Bonislolz/dictrack/issues/23))
