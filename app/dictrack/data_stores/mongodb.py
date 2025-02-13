@@ -149,6 +149,9 @@ class MongoDBDataStore(BaseDataStore):
         valid_type(expire, six.integer_types, allow_empty=True)
         valid_type(expire_at, six.integer_types, allow_empty=True)
 
+        if not trackers:
+            return True
+
         now_ts = int(time.time())
         common_update = {"$setOnInsert": {}}
         # Process expire timestamp
