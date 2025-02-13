@@ -95,6 +95,12 @@ This project is licensed under the [MIT License](https://github.com/Bonislolz/di
 
 # CHANGELOG
 
+## [2.0.9](https://github.com/Bonislolz/dictrack/compare/2.0.8...2.0.9) - 2025-02-13
+### Added
+### Changed
+### Fixed
+- Fixed stale data check failure in Python 3 ([#27](https://github.com/Bonislolz/dictrack/issues/27))
+
 ## [2.0.8](https://github.com/Bonislolz/dictrack/compare/2.0.7...2.0.8) - 2025-02-11
 ### Added
 - Tracker now supports modifying progress ([#25](https://github.com/Bonislolz/dictrack/issues/25))
