@@ -412,6 +412,9 @@ class RedisDataCache(BaseDataCache):
         for group_id in client.zrangebyscore(
             self._get_last_cached_key(), 0, now_ts - self.stale_threshold
         ):
+            # Python 3 compatibility, decode bytes to string
+            if six.PY3:
+                group_id = group_id.decode("utf-8")
             self.data_store.store_all(group_id, self.fetch(group_id))
             self.remove(group_id)
         else:
