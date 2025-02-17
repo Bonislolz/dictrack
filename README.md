@@ -95,6 +95,12 @@ This project is licensed under the [MIT License](https://github.com/Bonislolz/di
 
 # CHANGELOG
 
+## [2.0.10](https://github.com/Bonislolz/dictrack/compare/2.0.9...2.0.10) - 2025-02-17
+### Added
+### Changed
+### Fixed
+- Fixed tuple nesting issue in type validation ([#29](https://github.com/Bonislolz/dictrack/issues/29))
+
 ## [2.0.9](https://github.com/Bonislolz/dictrack/compare/2.0.8...2.0.9) - 2025-02-13
 ### Added
 ### Changed
