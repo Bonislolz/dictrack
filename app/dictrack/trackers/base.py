@@ -290,7 +290,7 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
 
     @progress.setter
     def progress(self, value):
-        valid_type(value, (six.integer_types, float))
+        valid_type(value, six.integer_types + (float,))
         self._check_health()
 
         self._progress = value
@@ -388,7 +388,7 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         )
 
     def add_targets(self, target):
-        valid_type(target, (six.integer_types, float, list, tuple))
+        valid_type(target, six.integer_types + (float, list, tuple))
         self._check_health()
 
         self._multi_target.extend(self._transform_multi_target(target))
@@ -406,12 +406,12 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
     ):
         valid_type(name, six.string_types)
         valid_elements_type(conditions, BaseCondition)
-        valid_type(target, (six.integer_types, float, list, tuple))
+        valid_type(target, six.integer_types + (float, list, tuple))
         valid_type(group_id, six.string_types, allow_empty=True)
         valid_elements_type(limiters, BaseLimiter, allow_empty=True)
         valid_obj(reset_policy, list(six.moves.range(ResetPolicy.ALL + 1)))
         valid_type(loop_forever, bool)
-        valid_type(init_progress, (six.integer_types, float))
+        valid_type(init_progress, six.integer_types + (float,))
 
     def _init_target(self, target):
         self._current_stage = 0
@@ -422,7 +422,9 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         return (
             list(target)
             if isinstance(target, tuple)
-            else [target] if isinstance(target, (six.integer_types, float)) else target
+            else (
+                [target] if isinstance(target, six.integer_types + (float,)) else target
+            )
         )
 
     def _get_new_target(self):
