@@ -114,8 +114,10 @@ class TimeLimiter(BaseLimiter):
             self.limited = True
 
             return False
+        else:
+            self.limited = False
 
-        return True
+            return True
 
     def reset(self, *args, **kwargs):
         super(TimeLimiter, self).reset()
