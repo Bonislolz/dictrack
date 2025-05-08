@@ -95,6 +95,12 @@ This project is licensed under the [MIT License](https://github.com/Bonislolz/di
 
 # CHANGELOG
 
+## [2.1.0](https://github.com/Bonislolz/dictrack/compare/2.0.10...2.1.0) - 2025-05-08
+### Added
+### Changed
+### Fixed
+- Improve reset flow ([#31](https://github.com/Bonislolz/dictrack/issues/31))
+
 ## [2.0.10](https://github.com/Bonislolz/dictrack/compare/2.0.9...2.0.10) - 2025-02-17
 ### Added
 ### Changed
