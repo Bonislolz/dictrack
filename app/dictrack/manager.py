@@ -275,12 +275,15 @@ class TrackingManager(object):
         Dispatches reset events through the tracker's `forward_event` method and updates the tracker after reset.
         """
         valid_type(name, six.string_types)
-        valid_obj(reset_policy, list(six.moves.range(ResetPolicy.ALL + 1)))
+        valid_obj(
+            reset_policy, list(six.moves.range(ResetPolicy.ALL + 1)), allow_empty=True
+        )
 
-        tracker = self.get_tracker(group_id, name)
-        if tracker is None:
+        trackers = self.get_trackers(group_id, name)
+        if not trackers:
             return False
 
+        tracker = trackers[0]
         tracker.forward_event(self._dispatch_event)
         tracker.reset(reset_policy=reset_policy, *args, **kwargs)
         self.update_tracker(group_id, tracker)
