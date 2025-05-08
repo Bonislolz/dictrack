@@ -95,6 +95,13 @@ This project is licensed under the [MIT License](https://github.com/Bonislolz/di
 
 # CHANGELOG
 
+## [2.1.1](https://github.com/Bonislolz/dictrack/compare/2.1.0...2.1.1) - 2025-05-09
+### Added
+### Changed
+- perf: enhance `CountLimiter` `__repr__` output ([#34](https://github.com/Bonislolz/dictrack/issues/34))
+### Fixed
+- fix: correct reset logic and parameter handling ([#33](https://github.com/Bonislolz/dictrack/issues/33))
+
 ## [2.1.0](https://github.com/Bonislolz/dictrack/compare/2.0.10...2.1.0) - 2025-05-08
 ### Added
 ### Changed
