@@ -57,10 +57,14 @@ class CountLimiter(BaseLimiter):
             self.limited = True
 
             return False
+        else:
+            self.limited = False
 
-        return True
+            return True
 
     def reset(self, *args, **kwargs):
         super(CountLimiter, self).reset()
 
-        self.remaining = self.count
+        count = kwargs["reset_count"] if "reset_count" in kwargs else self.count
+
+        self.count = self.remaining = count

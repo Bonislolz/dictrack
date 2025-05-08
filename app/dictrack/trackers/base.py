@@ -68,7 +68,7 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         loop_forever=False,
         init_progress=0,
         *args,
-        **kwargs
+        **kwargs,
     ):
         """
         A base class for tracking data and maintaining progress based on conditions, limiters, and targets.
@@ -364,7 +364,7 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         for code in EVENT_ALL:
             self.add_listener(code, cb)
 
-    def reset(self, reset_policy=None):
+    def reset(self, reset_policy=None, *args, **kwargs):
         valid_obj(
             reset_policy, list(six.moves.range(ResetPolicy.ALL + 1)), allow_empty=True
         )
@@ -377,7 +377,7 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
             self._progress = 0
         if ResetPolicy.LIMITER & reset_policy:
             for limiter in self.limiters:
-                limiter.reset()
+                limiter.reset(*args, **kwargs)
 
             self._limited = False
 

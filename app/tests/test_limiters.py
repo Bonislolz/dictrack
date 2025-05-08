@@ -34,6 +34,12 @@ def test_count():
     with pytest.raises(TypeError):
         CountLimiter("3")
 
+    limiter.reset(reset_count=5)
+    assert limiter.count == 5
+    for _ in six.moves.range(5):
+        limiter.post_track({}, post_tracker)
+    assert limiter.limited is True
+
     limiter = CountLimiter(1)
     post_tracker = MockTracker()
     post_tracker.completed = True

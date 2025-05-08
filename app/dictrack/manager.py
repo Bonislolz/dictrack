@@ -243,7 +243,7 @@ class TrackingManager(object):
         self.data_store.remove(group_id, name=name)
 
     @typecheck()
-    def reset_tracker(self, group_id, name, reset_policy=None):
+    def reset_tracker(self, group_id, name, reset_policy=None, *args, **kwargs):
         """
         Reset a tracker in a specified group according to the provided reset policy.
 
@@ -282,7 +282,7 @@ class TrackingManager(object):
             return False
 
         tracker.forward_event(self._dispatch_event)
-        tracker.reset(reset_policy=reset_policy)
+        tracker.reset(reset_policy=reset_policy, *args, **kwargs)
         self.update_tracker(group_id, tracker)
 
         return True
