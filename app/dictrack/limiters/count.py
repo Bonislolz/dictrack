@@ -65,6 +65,6 @@ class CountLimiter(BaseLimiter):
     def reset(self, *args, **kwargs):
         super(CountLimiter, self).reset()
 
-        count = kwargs["reset_count"] if "reset_count" in kwargs else self.count
+        count = kwargs.get("reset_count", self.count)
 
         self.count = self.remaining = count
