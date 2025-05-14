@@ -95,6 +95,12 @@ This project is licensed under the [MIT License](https://github.com/Bonislolz/di
 
 # CHANGELOG
 
+## [2.1.2](https://github.com/Bonislolz/dictrack/compare/2.1.1...2.1.2) - 2025-05-14
+### Added
+### Changed
+### Fixed
+- fix: python 2 syntax issue ([#36](https://github.com/Bonislolz/dictrack/issues/36))
+
 ## [2.1.1](https://github.com/Bonislolz/dictrack/compare/2.1.0...2.1.1) - 2025-05-09
 ### Added
 ### Changed

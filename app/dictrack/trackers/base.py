@@ -68,7 +68,7 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         loop_forever=False,
         init_progress=0,
         *args,
-        **kwargs,
+        **kwargs
     ):
         """
         A base class for tracking data and maintaining progress based on conditions, limiters, and targets.
