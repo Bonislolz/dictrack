@@ -48,7 +48,9 @@ class CountLimiter(BaseLimiter):
         return hash(self.count)
 
     def __repr__(self):
-        return "<CountLimiter (count={} remaining={})>".format(self.count, self.remaining)
+        return "<CountLimiter (count={} remaining={})>".format(
+            self.count, self.remaining
+        )
 
     def post_track(self, data, post_tracker, *args, **kwargs):
         self.remaining -= 1
