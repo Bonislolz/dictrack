@@ -132,3 +132,5 @@ class TimeLimiter(BaseLimiter):
         self.interval = timedelta(seconds=delta_seconds)
         self.start = now_ts
         self.end = now_ts + delta_seconds
+
+        return self.pre_track(None, None)
