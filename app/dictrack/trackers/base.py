@@ -376,10 +376,9 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         if ResetPolicy.PROGRESS & reset_policy:
             self._progress = 0
         if ResetPolicy.LIMITER & reset_policy:
-            for limiter in self.limiters:
-                limiter.reset(*args, **kwargs)
-
-            self._limited = False
+            self._limited = any(
+                not limiter.reset(*args, **kwargs) for limiter in self.limiters
+            )
 
         self._completed = False
 
