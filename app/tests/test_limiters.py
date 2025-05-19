@@ -27,18 +27,25 @@ def test_count():
         limiter.post_track({}, post_tracker)
     assert limiter.limited is True
 
-    limiter.reset()
+    assert limiter.reset() is True
     assert limiter.count == 3
     assert limiter.limited is False
 
     with pytest.raises(TypeError):
         CountLimiter("3")
 
-    limiter.reset(reset_count=5)
+    assert limiter.reset(reset_count=5) is True
     assert limiter.count == 5
     for _ in six.moves.range(5):
         limiter.post_track({}, post_tracker)
     assert limiter.limited is True
+
+    assert limiter.reset(reset_count=0) is False
+    assert limiter.count == limiter.remaining == 0
+    assert limiter.limited is True
+
+    with pytest.raises(ValueError):
+        limiter.reset(reset_count=-1)
 
     limiter = CountLimiter(1)
     post_tracker = MockTracker()
@@ -87,7 +94,7 @@ def test_time():
     limiter.pre_track({}, MockTracker())
     assert limiter.limited is True
 
-    limiter.reset()
+    assert limiter.reset() is True
     limiter.pre_track({}, MockTracker())
     assert limiter.limited is False
 
@@ -96,18 +103,18 @@ def test_time():
     limiter.pre_track({}, MockTracker())
     assert limiter.limited is True
 
-    limiter.reset()
+    assert limiter.reset() is True
     time.sleep(1)
     limiter.pre_track({}, MockTracker())
     assert limiter.limited is False
 
     now_ts = int(time.time())
-    limiter.reset(now_ts=now_ts - 3600 * 12)
+    assert limiter.reset(now_ts=now_ts - 3600 * 12) is True
     limiter.pre_track({}, MockTracker())
     assert limiter.limited is False
 
     now_ts = int(time.time())
-    limiter.reset(now_ts=now_ts + 2, reset_seconds=10)
+    assert limiter.reset(now_ts=now_ts + 2, reset_seconds=10) is False
     limiter.pre_track({}, MockTracker())
     assert limiter.limited is True
     time.sleep(3)

@@ -68,5 +68,14 @@ class CountLimiter(BaseLimiter):
         super(CountLimiter, self).reset()
 
         count = kwargs.get("reset_count", self.count)
+        if count < 0:
+            raise ValueError("`reset_count` must be a positive integer or zero")
 
         self.count = self.remaining = count
+
+        if count == 0:
+            self.limited = True
+
+            return False
+
+        return True
