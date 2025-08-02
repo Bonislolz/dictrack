@@ -194,7 +194,12 @@ class RedisDataCache(BaseDataCache):
             if b_tracker is None:
                 return []
 
-            return [BaseTracker.deserialize(b_tracker)]
+            tracker = BaseTracker.deserialize(b_tracker)
+            # Filter out None value
+            if tracker is None:
+                return []
+
+            return tracker
         # All data
         elif name is None:
             b_trackers = [
@@ -296,6 +301,10 @@ class RedisDataCache(BaseDataCache):
                     self._get_data_key(group_id=group_id), count=self._batch_size
                 ):
                     tracker = BaseTracker.deserialize(b_tracker)
+                    # Skip process if tracker is None
+                    if tracker is None:
+                        continue
+
                     tracker.forward_event(self.forward_cb)
                     tracker.track(data, cache=conditions_cache, *args, **kwargs)
 
