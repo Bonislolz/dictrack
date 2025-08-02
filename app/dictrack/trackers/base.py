@@ -543,9 +543,21 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         :return: The deserialized tracker instance.
         :rtype: `BaseTracker`
         """
-        state = pickle.loads(b_tracker)
-        tracker = state["cls"].__new__(state["cls"])
-        tracker.__setstate__(state)
+        try:
+            state = pickle.loads(b_tracker)
+            tracker = state["cls"].__new__(state["cls"])
+            tracker.__setstate__(state)
+        except AttributeError as e:
+            logger.warning(
+                "Failed to deserialize tracker, possibly due to missing class definition. Error: %s",
+                e,
+            )
+            return None
+        except Exception as e:
+            logger.exception(
+                "Failed to deserialize tracker, unexpected error: %s", str(e)[:100]
+            )
+            return None
 
         return tracker
 
@@ -559,4 +571,8 @@ class BaseTracker(six.with_metaclass(ABCMeta)):
         :rtype: `list[BaseTracker]`
         """
         valid_type(b_trackers, (list, tuple))
-        return [BaseTracker.deserialize(b_tracker) for b_tracker in b_trackers]
+        trackers = [BaseTracker.deserialize(b_tracker) for b_tracker in b_trackers]
+        # Filter out None values
+        trackers = [tracker for tracker in trackers if tracker is not None]
+
+        return trackers
