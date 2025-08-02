@@ -95,6 +95,13 @@ This project is licensed under the [MIT License](https://github.com/Bonislolz/di
 
 # CHANGELOG
 
+## [2.1.4](https://github.com/Bonislolz/dictrack/compare/2.1.3...2.1.4) - 2025-08-02
+### Added
+- feat: add KeyValueInList and related classes for list-based checks ([#40](https://github.com/Bonislolz/dictrack/issues/40))
+### Changed
+- feat: filter out None values during tracker deserialization process ([#41](https://github.com/Bonislolz/dictrack/issues/41))
+### Fixed
+
 ## [2.1.3](https://github.com/Bonislolz/dictrack/compare/2.1.2...2.1.3) - 2025-05-19
 ### Added
 - feat: validate count limits and improve reset logic for limiters ([#38](https://github.com/Bonislolz/dictrack/issues/38))
