@@ -15,10 +15,16 @@ from dictrack.conditions.keys import (
     KeyValueEQ,
     KeyValueGE,
     KeyValueGT,
+    KeyValueInList,
     KeyValueLE,
+    KeyValueListHasItem,
+    KeyValueListIntersectList,
+    KeyValueListNotHasItem,
+    KeyValueListNotIntersectList,
     KeyValueLT,
     KeyValueNE,
     KeyValueNotContained,
+    KeyValueNotInList,
 )
 
 
@@ -297,3 +303,199 @@ def test_key_value_not_contained():
     assert condition_non_case_sensitive.check(data3) is False
     assert condition_non_case_sensitive.check(data4) is False
     assert condition_non_case_sensitive.check(data5) is False
+
+
+def test_key_value_in_list():
+    condition1 = KeyValueInList("name", ["tim", "angela"])
+    assert condition1.__repr__() == (
+        "<KeyValueInList (key=name value=['tim', 'angela'])>"
+    )
+
+    data1 = {"name": "tim"}
+    data2 = {"name": "angela"}
+    data3 = {"name": "bob"}
+    data4 = {"name": "Tim"}
+    data5 = {"nickname": "tim"}
+    assert condition1.check(data1) is True
+    assert condition1.check(data2) is True
+    assert condition1.check(data3) is False
+    assert condition1.check(data4) is False
+    assert condition1.check(data5) is False
+
+    condition2 = KeyValueInList("age", [18, 19, 20])
+    assert condition2.__repr__() == "<KeyValueInList (key=age value=[18, 19, 20])>"
+
+    data1 = {"age": 18}
+    data2 = {"age": 19}
+    data3 = {"age": 20}
+    data4 = {"age": 21}
+    data5 = {"name": "tim"}
+    assert condition2.check(data1) is True
+    assert condition2.check(data2) is True
+    assert condition2.check(data3) is True
+    assert condition2.check(data4) is False
+    assert condition2.check(data5) is False
+
+
+def test_key_value_not_in_list():
+    condition1 = KeyValueNotInList("name", ["tim", "angela"])
+    assert condition1.__repr__() == (
+        "<KeyValueNotInList (key=name value=['tim', 'angela'])>"
+    )
+
+    data1 = {"name": "tim"}
+    data2 = {"name": "angela"}
+    data3 = {"name": "bob"}
+    data4 = {"name": "Tim"}
+    data5 = {"nickname": "tim"}
+    assert condition1.check(data1) is False
+    assert condition1.check(data2) is False
+    assert condition1.check(data3) is True
+    assert condition1.check(data4) is True
+    assert condition1.check(data5) is False
+
+    condition2 = KeyValueNotInList("age", [18, 19, 20])
+    assert condition2.__repr__() == "<KeyValueNotInList (key=age value=[18, 19, 20])>"
+
+    data1 = {"age": 18}
+    data2 = {"age": 19}
+    data3 = {"age": 20}
+    data4 = {"age": 21}
+    data5 = {"name": "tim"}
+    assert condition2.check(data1) is False
+    assert condition2.check(data2) is False
+    assert condition2.check(data3) is False
+    assert condition2.check(data4) is True
+    assert condition2.check(data5) is False
+
+
+def test_key_value_list_has_item():
+    condition1 = KeyValueListHasItem("players", "tim")
+    assert condition1.__repr__() == "<KeyValueListHasItem (key=players value=tim)>"
+
+    data1 = {"players": ["tim", "angela"]}
+    data2 = {"players": ["bob", "angela"]}
+    data3 = {"players": ["tim", "bob"]}
+    data4 = {"players": ["Tim", "angela"]}
+    data5 = {"name": "tim"}
+    assert condition1.check(data1) is True
+    assert condition1.check(data2) is False
+    assert condition1.check(data3) is True
+    assert condition1.check(data4) is False
+    assert condition1.check(data5) is False
+
+    condition2 = KeyValueListHasItem("scores", 100)
+    assert condition2.__repr__() == "<KeyValueListHasItem (key=scores value=100)>"
+
+    data1 = {"scores": [100, 200, 300]}
+    data2 = {"scores": [50, 60, 70]}
+    data3 = {"scores": [100, 200]}
+    data4 = {"scores": [150, 200]}
+    data5 = {"name": "tim"}
+    assert condition2.check(data1) is True
+    assert condition2.check(data2) is False
+    assert condition2.check(data3) is True
+    assert condition2.check(data4) is False
+    assert condition2.check(data5) is False
+
+
+def test_key_value_list_not_has_item():
+    condition1 = KeyValueListNotHasItem("players", "tim")
+    assert condition1.__repr__() == "<KeyValueListNotHasItem (key=players value=tim)>"
+
+    data1 = {"players": ["tim", "angela"]}
+    data2 = {"players": ["bob", "angela"]}
+    data3 = {"players": ["tim", "bob"]}
+    data4 = {"players": ["Tim", "angela"]}
+    data5 = {"name": "tim"}
+    assert condition1.check(data1) is False
+    assert condition1.check(data2) is True
+    assert condition1.check(data3) is False
+    assert condition1.check(data4) is True
+    assert condition1.check(data5) is False
+
+    condition2 = KeyValueListNotHasItem("scores", 100)
+    assert condition2.__repr__() == "<KeyValueListNotHasItem (key=scores value=100)>"
+
+    data1 = {"scores": [100, 200, 300]}
+    data2 = {"scores": [50, 60, 70]}
+    data3 = {"scores": [100, 200]}
+    data4 = {"scores": [150, 200]}
+    data5 = {"name": "tim"}
+    assert condition2.check(data1) is False
+    assert condition2.check(data2) is True
+    assert condition2.check(data3) is False
+    assert condition2.check(data4) is True
+    assert condition2.check(data5) is False
+
+
+def test_key_value_list_intersect_list():
+    condition1 = KeyValueListIntersectList("room_ids", [101, 103, 107])
+    assert (
+        condition1.__repr__()
+        == "<KeyValueListIntersectList (key=room_ids value=[101, 103, 107])>"
+    )
+
+    data1 = {"room_ids": [101, 102, 103]}
+    data2 = {"room_ids": [104, 105, 106]}
+    data3 = {"room_ids": [107, 108, 109]}
+    data4 = {"room_ids": [101, 103, 107]}
+    data5 = {"name": "tim"}
+    assert condition1.check(data1) is True
+    assert condition1.check(data2) is False
+    assert condition1.check(data3) is True
+    assert condition1.check(data4) is True
+    assert condition1.check(data5) is False
+
+    condition2 = KeyValueListIntersectList("tags", ["urgent", "important"])
+    assert (
+        condition2.__repr__()
+        == "<KeyValueListIntersectList (key=tags value=['urgent', 'important'])>"
+    )
+
+    data1 = {"tags": ["urgent", "review"]}
+    data2 = {"tags": ["important", "review"]}
+    data3 = {"tags": ["urgent", "important"]}
+    data4 = {"tags": ["normal", "low"]}
+    data5 = {"name": "tim"}
+    assert condition2.check(data1) is True
+    assert condition2.check(data2) is True
+    assert condition2.check(data3) is True
+    assert condition2.check(data4) is False
+    assert condition2.check(data5) is False
+
+
+def test_key_value_list_not_intersect_list():
+    condition1 = KeyValueListNotIntersectList("room_ids", [101, 103, 107])
+    assert (
+        condition1.__repr__()
+        == "<KeyValueListNotIntersectList (key=room_ids value=[101, 103, 107])>"
+    )
+
+    data1 = {"room_ids": [101, 102, 103]}
+    data2 = {"room_ids": [104, 105, 106]}
+    data3 = {"room_ids": [107, 108, 109]}
+    data4 = {"room_ids": [101, 103, 107]}
+    data5 = {"name": "tim"}
+    assert condition1.check(data1) is False
+    assert condition1.check(data2) is True
+    assert condition1.check(data3) is False
+    assert condition1.check(data4) is False
+    assert condition1.check(data5) is False
+
+    condition2 = KeyValueListNotIntersectList("tags", ["urgent", "important"])
+    assert (
+        condition2.__repr__()
+        == "<KeyValueListNotIntersectList (key=tags value=['urgent', 'important'])>"
+    )
+
+    data1 = {"tags": ["urgent", "review"]}
+    data2 = {"tags": ["important", "review"]}
+    data3 = {"tags": ["urgent", "important"]}
+    data4 = {"tags": ["normal", "low"]}
+    data5 = {"name": "tim"}
+    assert condition2.check(data1) is False
+    assert condition2.check(data2) is False
+    assert condition2.check(data3) is False
+    assert condition2.check(data4) is True
+    assert condition2.check(data5) is False
