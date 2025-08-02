@@ -214,9 +214,13 @@ class MongoDBDataStore(BaseDataStore):
 
             return False, []
 
-        return True, [
+        trackers = [
             BaseTracker.deserialize(document["b_tracker"]) for document in cursor
         ]
+        # Filter out None values
+        trackers = [tracker for tracker in trackers if tracker is not None]
+
+        return True, trackers
 
     @typecheck()
     def remove(self, group_id, name=None, **kwargs):
@@ -249,6 +253,12 @@ class MongoDBDataStore(BaseDataStore):
 
             return False, []
 
+        # Filter out None values
+        removed_trackers = [
+            removed_tracker
+            for removed_tracker in removed_trackers
+            if removed_tracker is not None
+        ]
         for tracker in removed_trackers:
             tracker.removed = True
 
@@ -291,6 +301,12 @@ class MongoDBDataStore(BaseDataStore):
         except Exception as e:
             logger.exception("Remove expired tracker failed, {}".format(e.__repr__()))
 
+        # Filter out None values
+        removed_trackers = [
+            removed_tracker
+            for removed_tracker in removed_trackers
+            if removed_tracker is not None
+        ]
         # Mark removed and check cache
         for tracker in removed_trackers:
             self.data_cache.remove(tracker.group_id, tracker.name)
