@@ -95,6 +95,12 @@ This project is licensed under the [MIT License](https://github.com/Bonislolz/di
 
 # CHANGELOG
 
+## [2.1.5](https://github.com/Bonislolz/dictrack/compare/2.1.4...2.1.5) - 2025-08-06
+### Added
+### Changed
+### Fixed
+- fix: Return tracker as a single-item list for consistency ([#43](https://github.com/Bonislolz/dictrack/issues/43))
+
 ## [2.1.4](https://github.com/Bonislolz/dictrack/compare/2.1.3...2.1.4) - 2025-08-02
 ### Added
 - feat: add KeyValueInList and related classes for list-based checks ([#40](https://github.com/Bonislolz/dictrack/issues/40))

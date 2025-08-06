@@ -199,7 +199,7 @@ class RedisDataCache(BaseDataCache):
             if tracker is None:
                 return []
 
-            return tracker
+            return [tracker]
         # All data
         elif name is None:
             b_trackers = [
