@@ -31,7 +31,7 @@ def get_version():
 
 
 setup(
-    name="fork-dictrack-geminixiang",
+    name="dictrack",
     version=get_version(),
     author="Tim Liao",
     author_email="bonis0324work@gmail.com",
