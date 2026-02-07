@@ -3,7 +3,7 @@ name: Publish to TestPyPI
 on:
   push:
     tags:
-      - '[0-9]*.[0-9]*.[0-9]*.test*' # Trigger only on tags like 2.1.6.test1
+      - '[0-9]*.[0-9]*.[0-9]*.test*'  # Trigger only on tags like 2.1.6.test1
 
 jobs:
   build-and-publish:
