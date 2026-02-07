@@ -1,0 +1,46 @@
+name: Unittest
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ["2.7", "3.8"]
+
+    services:
+      redis:
+        image: redis:6.2
+        ports:
+          - 6379:6379
+      mongodb:
+        image: mongo:5.0
+        ports:
+          - 27017:27017
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ "${{ matrix.python-version }}" = "2.7" ]; then
+          pip install "pytest<5" mock pytest-cov
+        else
+          pip install pytest pytest-cov
+        fi
+        pip install .[redis,memory,mongodb]
+
+    - name: Test with pytest
+      run: |
+        python -m pytest app/
