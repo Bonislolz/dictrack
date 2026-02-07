@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+echo "=== 1. 安裝套件 (Editable Mode) ==="
+pip install -e .
+
+echo "=== 2. 自動生成 API 文件來源檔 (.rst) ==="
+sphinx-apidoc -f -o build/docs app/dictrack
+
+echo "=== 3. cleanup build file ==="
+rm -rf build/docs/_build
+
+echo "=== 4. build HTML docs ==="
+cd build/docs
+make html
+cd ../..
+
+echo "=== 5. lauch server ==="
+python3 -m http.server -d build/docs/_build/html 8000
