@@ -3,7 +3,7 @@ name: Publish to TestPyPI
 on:
   push:
     tags:
-      - 'v*.test*' # 只在推送 v2.1.6.test1 這種標籤時觸發
+      - '[0-9]*.[0-9]*.[0-9]*.test*' # Trigger only on tags like 2.1.6.test1
 
 jobs:
   build-and-publish:
@@ -30,6 +30,6 @@ jobs:
     - name: Publish to TestPyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        repository-url: https://test.pypi.org/legacy/ # 指定上傳到 TestPyPI
-        password: ${{ secrets.TEST_PYPI_API_TOKEN }} # 使用 TestPyPI 的 Token
-        skip-existing: true # 如果已經有這個版本，就略過（不報錯）
+        repository-url: https://test.pypi.org/legacy/
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        skip-existing: true
