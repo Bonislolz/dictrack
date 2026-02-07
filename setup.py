@@ -68,6 +68,10 @@ setup(
             "apscheduler[gevent] == 3.8.1;python_version == '2.7'",
             "apscheduler[gevent] < 4.0;python_version >= '3.7'",
         ],
+        "docs": [
+            "sphinx",
+            "sphinxawesome-theme",
+        ],
     },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
