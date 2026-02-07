@@ -1,6 +1,6 @@
 # dictrack - the dictionary tracker
 
-<img src="https://img.shields.io/pypi/pyversions/dictrack.svg?color=%2334D058" alt="Supported Python versions">
+<img src="https://img.shields.io/pypi/pyversions/dictrack.svg?color=%2334D058" alt="Supported Python versions">[![All Contributors](https://img.shields.io/github/all-contributors/Bonislolz/dictrack?color=ee8449&style=flat-square)](#contributors)
 
 ## A Flexible Dictionary Data Tracker for Condition-Based Monitoring
 
@@ -107,7 +107,9 @@ The documentation is built using [Sphinx](https://www.sphinx-doc.org/) and hoste
 
 # Contributing
 
-...
+<a href="https://github.com/Bonislolz/dictrack/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Bonislolz/dictrack" />
+</a>
 
 # License
 This project is licensed under the [MIT License](https://github.com/Bonislolz/dictrack?tab=MIT-1-ov-file).
