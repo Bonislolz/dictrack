@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspaces/dictrack:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    environment:
+      - REDIS_HOST=redis
+      - MONGODB_HOST=mongodb
+      - PYTHONPATH=/workspaces/dictrack/app
+    links:
+      - redis
+      - mongodb
+    depends_on:
+      - redis
+      - mongodb
+
+  redis:
+    image: redis:6.2
+    # Ports are accessible internally by the app service.
+    # We don't expose them to the host to avoid port conflicts (address already in use).
+    # If you need to access redis from the host, use VS Code's "Forward Port" feature.
+    # ports:
+    #   - "6379:6379"
+
+  mongodb:
+    image: mongo:5.0
+    # Ports are accessible internally by the app service.
+    # ports:
+    #   - "27017:27017"
