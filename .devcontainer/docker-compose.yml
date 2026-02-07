@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build:
@@ -21,14 +19,10 @@ services:
 
   redis:
     image: redis:6.2
-    # Ports are accessible internally by the app service.
-    # We don't expose them to the host to avoid port conflicts (address already in use).
-    # If you need to access redis from the host, use VS Code's "Forward Port" feature.
     # ports:
     #   - "6379:6379"
 
   mongodb:
     image: mongo:5.0
-    # Ports are accessible internally by the app service.
     # ports:
     #   - "27017:27017"
