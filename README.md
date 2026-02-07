@@ -1,6 +1,6 @@
 # dictrack - the dictionary tracker
 
-<img src="https://img.shields.io/pypi/pyversions/dictrack.svg?color=%2334D058" alt="Supported Python versions">[![All Contributors](https://img.shields.io/github/all-contributors/Bonislolz/dictrack?color=ee8449&style=flat-square)](#contributors)
+<img src="https://img.shields.io/pypi/pyversions/dictrack.svg?color=%2334D058" alt="Supported Python versions">
 
 ## A Flexible Dictionary Data Tracker for Condition-Based Monitoring
 
