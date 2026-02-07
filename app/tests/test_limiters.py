@@ -9,7 +9,6 @@ from os.path import abspath, dirname, join
 import pytest
 import six
 
-sys.path.insert(0, abspath(join(dirname(__file__), "..")))
 from dictrack.limiters.count import CountLimiter
 from dictrack.limiters.time import TimeLimiter
 

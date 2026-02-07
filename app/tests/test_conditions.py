@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import operator
-import sys
-from os.path import abspath, dirname, join
 
 import pytest
 
-sys.path.insert(0, abspath(join(dirname(__file__), "..")))
 from dictrack.conditions.keys import (
     KeyExists,
     KeyNotExists,
