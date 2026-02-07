@@ -1,5 +1,7 @@
 # dictrack - the dictionary tracker
 
+<img src="https://img.shields.io/pypi/pyversions/dictrack.svg?color=%2334D058" alt="Supported Python versions">
+
 ## A Flexible Dictionary Data Tracker for Condition-Based Monitoring
 
 `dictrack` is a powerful dictionary tracking tool designed for condition-based monitoring and management. At its core, `dictrack` allows developers to easily track and handle dynamic data using flexible components such as conditions, targets, and limiters. It supports various data sources (e.g., `Redis`, `MongoDB`) and offers advanced mechanisms for data caching and persistence.
