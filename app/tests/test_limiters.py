@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-import sys
 import time
 from datetime import timedelta
-from os.path import abspath, dirname, join
 
 import pytest
 import six
 
-sys.path.insert(0, abspath(join(dirname(__file__), "..")))
 from dictrack.limiters.count import CountLimiter
 from dictrack.limiters.time import TimeLimiter
 
@@ -68,30 +65,25 @@ def test_count():
 
 def test_time():
     limiter = TimeLimiter(interval=timedelta(seconds=1))
-    time.sleep(2)
-    limiter.pre_track({}, MockTracker())
+    limiter.pre_track({}, MockTracker(), now_ts=limiter.start + 2)
     assert limiter.limited is True
 
     limiter = TimeLimiter(interval=timedelta(days=1))
-    time.sleep(2)
-    limiter.pre_track({}, MockTracker())
+    limiter.pre_track({}, MockTracker(), now_ts=limiter.start + 2)
     assert limiter.limited is False
 
     limiter = TimeLimiter(end_ts=int(time.time()) + 1)
-    time.sleep(2)
-    limiter.pre_track({}, MockTracker())
+    limiter.pre_track({}, MockTracker(), now_ts=limiter.end + 1)
     assert limiter.limited is True
 
     now_ts = int(time.time())
     limiter = TimeLimiter(start_ts=now_ts, end_ts=now_ts + 1)
-    time.sleep(2)
-    limiter.pre_track({}, MockTracker())
+    limiter.pre_track({}, MockTracker(), now_ts=now_ts + 2)
     assert limiter.limited is True
 
     now_ts = int(time.time())
     limiter = TimeLimiter(start_ts=now_ts, interval=timedelta(seconds=1))
-    time.sleep(2)
-    limiter.pre_track({}, MockTracker())
+    limiter.pre_track({}, MockTracker(), now_ts=now_ts + 2)
     assert limiter.limited is True
 
     assert limiter.reset() is True
@@ -100,29 +92,28 @@ def test_time():
 
     now_ts = int(time.time())
     limiter = TimeLimiter(start_ts=now_ts - 86400 * 5, interval=timedelta(days=1))
-    limiter.pre_track({}, MockTracker())
+    limiter.pre_track({}, MockTracker(), now_ts=now_ts)
     assert limiter.limited is True
 
-    assert limiter.reset() is True
-    time.sleep(1)
-    limiter.pre_track({}, MockTracker())
+    assert limiter.reset(now_ts=now_ts) is True
+    limiter.pre_track({}, MockTracker(), now_ts=now_ts + 1)
     assert limiter.limited is False
 
     now_ts = int(time.time())
     assert limiter.reset(now_ts=now_ts - 3600 * 12) is True
-    limiter.pre_track({}, MockTracker())
+    limiter.pre_track({}, MockTracker(), now_ts=now_ts)
     assert limiter.limited is False
 
     now_ts = int(time.time())
     assert limiter.reset(now_ts=now_ts + 2, reset_seconds=10) is False
-    limiter.pre_track({}, MockTracker())
+    limiter.pre_track({}, MockTracker(), now_ts=now_ts)
     assert limiter.limited is True
-    time.sleep(3)
-    limiter.pre_track({}, MockTracker())
+    limiter.pre_track({}, MockTracker(), now_ts=now_ts + 3)
     assert limiter.limited is False
 
-    limiter = TimeLimiter(start_ts=int(time.time()) + 2, interval=timedelta(seconds=1))
-    limiter.pre_track({}, MockTracker())
+    now_ts = int(time.time())
+    limiter = TimeLimiter(start_ts=now_ts + 2, interval=timedelta(seconds=1))
+    limiter.pre_track({}, MockTracker(), now_ts=now_ts)
     assert limiter.limited is True
 
     with pytest.raises(TypeError):
