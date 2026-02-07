@@ -86,7 +86,24 @@ print(manager.get_trackers(group_id=group_id, name="Demo-1"))
 ```
 # Documentation
 
-...
+To build the documentation locally, you can use the provided script:
+
+1.  Ensure you have the required dependencies installed:
+    ```bash
+    pip install .[docs]
+    ```
+
+2.  Run the documentation build script:
+    ```bash
+    ./docs.sh
+    ```
+    This script will:
+    -   Install the package in editable mode.
+    -   Generate API documentation source files using `sphinx-apidoc`.
+    -   Build the HTML documentation using Sphinx.
+    -   Start a local server to preview the documentation at `http://localhost:8000`.
+
+The documentation is built using [Sphinx](https://www.sphinx-doc.org/) and hosted on [Read the Docs](https://dictrack.readthedocs.io/).
 
 # Contributing
 
